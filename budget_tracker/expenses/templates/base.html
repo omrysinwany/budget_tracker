@@ -26,16 +26,16 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home</a>
+            <a class="nav-link" href={% url 'home' %}>Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="expenses/">expenses</a>
+            <a class="nav-link" href={% url 'expense_list' %}>View Expenses</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="expenses/<int:expense_id>/">expense_id</a>
+            <a class="nav-link" href={% url 'user_input_name' %}>View Personal Expense</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
+            <a class="nav-link" href={% url 'add_expense' %}>Add Expense</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Contact</a>

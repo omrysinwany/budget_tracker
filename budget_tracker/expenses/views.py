@@ -1,5 +1,7 @@
-from django.shortcuts import render, HttpResponse
-from .models import Expense
+from django.shortcuts import redirect, render, HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from .models import Category, Expense
+from .forms import *
 import numpy as np
 import pandas as pd
 
@@ -9,12 +11,44 @@ def home(request):
 
 def expense_list(request):
     expenses = Expense.objects.all()
-    return render(request, 'expenses/expense_list.html', {'expenses': expenses})
+    return render(request, 'expense_list.html', {'expenses': expenses})
 
+def add_expense(request):
+    if request.method == "POST":
+        form = NewExpense(request.POST)
 
-def expense_detail(request, expense_id):
-    expense = Expense.objects.get(id=expense_id)
-    return render(request, 'expenses/expense_detail.html', {'expense': expense})
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            amount = form.cleaned_data["amount"]
+            date = form.cleaned_data["date"]
+            Category = form.cleaned_data["Category"]
+            notes = form.cleaned_data["notes"]
+            new_expense = Expense(name=name, amount=amount, date=date, notes=notes, Category=Category)
+            new_expense.save()
+
+            return redirect('add_expense')
+
+    else:
+        form = NewExpense()
+
+    return render(request, 'add_expense.html', {'form': form})
+
+def expense_detail(request, name):
+    related_expenses = Expense.objects.filter(name=name)
+    return render(request, 'expense_detail.html', {'related_expenses': related_expenses})
+
+def user_input_name(response):
+    if response.method == "POST":
+        form = UserInput(response.POST)
+
+        if form.is_valid():
+            expense_instance = form.cleaned_data["name"]
+            url = reverse('expense_detail', args=[expense_instance])
+
+        return HttpResponseRedirect(url)
+    else: 
+        form = UserInput()
+    return render(response, 'input_name.html', {'form': form})
 
 
 def expense_statistics(request):
