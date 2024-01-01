@@ -1,7 +1,7 @@
 {% extends "base.html" %} 
-{% block title %} Expense Page {% endblock %}
-{% block content %} <h1>Expense List</h1>
-{% for expense in expenses %}
-    <p>{{ expense.amount }} - {{ expense.category.name }}</p>
-{% endfor %}
+{% block title %} Expense List Page {% endblock %}
+{% block content %} <h1> Expense List</h1>
+    {% for expense in expenses %}
+        <p>{{ expense.name }} : <strong>{{ expense.amount }}$</strong>  {{ expense.category }}&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [{{ expense.date }}]</p>
+    {% endfor %}
 {% endblock %}

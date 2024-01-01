@@ -1,6 +1,13 @@
 {% extends "base.html" %} 
-{% block title %} Expense Page {% endblock %}
-{% block content %} 
-<h1>Expense Detail</h1>
-<p>{{ expense.amount }} - {{ expense.category.name }}</p>
+{% block title %} Personal Expense Page {% endblock %}
+{% block content %} <h1>Personal Expense List</h1>
+    {% for expense in related_expenses %}
+        <p>{{ expense.name }} : <strong>{{ expense.amount }}$</strong>  {{ expense.category }}&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [{{ expense.date }}]</p>
+    {% endfor %}
+    <button type="button" class="btn btn-primary" onclick="goBack()">Go Back</button>
+    <script>
+    function goBack() {
+        window.history.back();
+    }
+    </script>
 {% endblock %}
