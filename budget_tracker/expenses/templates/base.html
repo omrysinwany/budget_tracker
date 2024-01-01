@@ -26,6 +26,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href={% url 'combined_statistics' %}>Statistic</a>
                 </li>
+                {% if user.is_authenticated %}
+                <!-- Existing navigation items for authenticated users -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user_profile' %}">User Profile</a>
+                </li>
+                <!-- ... Other items -->
+            {% endif %}
             </ul>
         </div>
         <div class="navbar-nav ml-auto">

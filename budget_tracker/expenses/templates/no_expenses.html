@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %} No Expenses {% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1>No Expenses Yet</h1>
+    <p>It seems you haven't added any expenses yet. Start managing your budget by adding expenses.</p>
+    <a href="{% url 'add_expense' %}" class="btn btn-primary">Add Expense</a>
+  </div>
+{% endblock %}

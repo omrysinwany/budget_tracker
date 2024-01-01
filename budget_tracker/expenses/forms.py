@@ -2,7 +2,8 @@ from datetime import date
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Expense
+from .models import Expense, UserProfile
+from django.contrib.auth.forms import PasswordChangeForm as BasePasswordChangeForm
 
 class UserInput(forms.Form):
     def __init__(self, user, *args, **kwargs):
@@ -59,3 +60,58 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ["username", "email", "password1", "password2"	]
+
+class UserProfileForm(forms.ModelForm):
+
+    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    bio = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.Textarea(attrs={'placeholder': 'Enter a short bio...', 'rows': 5})
+    )
+
+    class Meta:
+        model = UserProfile
+        fields = ['name', 'email', 'date_of_birth', 'bio', 'profile_picture']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Customize form fields if needed
+
+    def save(self, commit=True):
+        # Save the form without committing to the database
+        profile = super().save(commit=False)
+
+        # Get the associated user's email
+        user_email = self.instance.user.email if self.instance.user else None
+
+        # Set the email field with the user's email
+        profile.email = user_email
+
+        if commit:
+            # Save to the database if commit is True
+            profile.save()
+
+        return profile
+
+class CustomPasswordChangeForm(BasePasswordChangeForm):
+    new_password1 = forms.CharField(
+        label="New password",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        strip=False,
+        help_text="Enter your new password.",
+    )
+
+    new_password2 = forms.CharField(
+        label="Confirm new password",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Customize form fields if needed
+
+    class Meta:
+        model = User  # Replace with your User model if different

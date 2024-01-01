@@ -2,16 +2,22 @@ import os
 from django.shortcuts import get_object_or_404, redirect, render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import login, logout, authenticate
 from .models import *
 from .forms import *
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from django.contrib.auth.views import PasswordResetView
+from django.urls import reverse_lazy
 from django.conf import settings
 
 def home(request):
     return render(request, "home.html")
+
+def no_expenses(request):
+    return render(request, "no_expenses.html")
 
 def sign_up(request):
     if request.method == 'POST':
@@ -19,18 +25,75 @@ def sign_up(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+
+            UserProfile.objects.create(user=user)
+
             return redirect('/home')
     else:
         form = RegisterForm()
 
     return render(request, 'registration/sign_up.html', {"form": form})
 
+@login_required(login_url="/login")
+def user_profile(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    return render(request, 'user_profile.html', {'form': form})
+
+@login_required(login_url="/login")
+def update_profile(request):
+    user_profile = request.user.userprofile
+    
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    return render(request, 'update_profile.html', {'form': form})
+
+@login_required(login_url="/login")
+def change_password(request):
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile')
+    else:
+        form = CustomPasswordChangeForm(request.user)
+
+    return render(request, 'change_password.html', {'form': form})
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'registration/password_reset_form.html'
+    success_url = reverse_lazy('password_reset_done')
+
+def reset_password(request):
+    return CustomPasswordResetView.as_view()(request)
 
 @login_required(login_url="/login")
 def expense_list(request):
+    try:
+        users_instance = Users.objects.get(user=request.user)
+        expenses = Expense.objects.filter(user=users_instance)
 
-    users_instance = Users.objects.get(user=request.user)
-    expenses = Expense.objects.filter(user=users_instance)
+        if not expenses.exists():
+            # If the user has no expenses, redirect to another template
+            return render(request, 'no_expenses.html')
+    except Users.DoesNotExist:
+        # Handle the case where the Users instance does not exist
+        return render(request, 'no_expenses.html')
+
     return render(request, 'expense_list.html', {'expenses': expenses})
 
 def modify_expense(request, expense_id):
@@ -71,6 +134,7 @@ def delete_expense(request, expense_id):
 @login_required(login_url="/login")
 def add_expense(request):
 
+    users_instance, created = Users.objects.get_or_create(user=request.user)
     users_instance = Users.objects.get(user=request.user)
 
     if request.method == "POST":
@@ -219,6 +283,18 @@ def user_statistics_view(request):
 
 @login_required(login_url="/login")
 def combined_statistics(request):
+
+    try:
+        users_instance = Users.objects.get(user=request.user)
+        expenses = Expense.objects.filter(user=users_instance)
+
+        if not expenses.exists():
+            # If the user has no expenses, redirect to another template
+            return render(request, 'no_expenses.html')
+    except Users.DoesNotExist:
+        # Handle the case where the Users instance does not exist
+        return render(request, 'no_expenses.html')
+
      # Call each statistics function and get the context dictionaries
     bar_chart_context = statistics_view(request)
     pie_chart_context = user_statistics_view(request)

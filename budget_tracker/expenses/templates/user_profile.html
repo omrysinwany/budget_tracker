@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %} User Profile {% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1>User Profile</h1>
+    
+    <!-- Display user profile information -->
+    <div class="mt-4">
+      <h2>Profile Information</h2>
+      <form method="post" action="{% url 'update_profile' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success mt-2">Update Profile</button>
+      </form>
+    </div>
+    <div class="mt-3">
+      <a href="{% url 'change_password' %}" class="btn btn-primary mr-2">Change Password</a>
+      <a href="{% url 'password_reset' %}" class="btn btn-warning mr-2">Reset Password</a>
+    </div>
+  </div>
+{% endblock %}
