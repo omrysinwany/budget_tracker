@@ -1,3 +1,43 @@
 {% extends "base.html" %}
+
 {% block title %} Home Page {% endblock %}
-{% block content %} this is the home page {% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="jumbotron">
+      <h1 class="display-4">Welcome to Your Budget Tracker App!</h1>
+      <p class="lead">
+        Managing your finances made easy. Stay on top of your expenses and take control of your budget with our Budget Tracker App.
+      </p>
+      {% if user.is_authenticated %}
+        <p class="lead">Explore the features using the navigation bar above.</p>
+      {% else %}
+        <hr class="my-4">
+        <p>Ready to take charge of your finances?</p>
+        <ul>
+          <li>Track Your Expenses</li>
+          <li>Create Personal Budgets</li>
+          <li>Visualize Spending Patterns</li>
+          <li>Receive Financial Insights</li>
+        </ul>
+        <p>Sign up now and start your journey towards financial wellness.</p>
+        <a href="/sign-up" class="btn btn-primary btn-lg">Sign Up</a>
+      {% endif %}
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <h2>Track Expenses</h2>
+        <p>Record your daily expenses effortlessly. Categorize your spending to get a clear overview of where your money is going.</p>
+      </div>
+      <div class="col-md-4">
+        <h2>Create Budgets</h2>
+        <p>Set monthly budgets for different categories. Receive alerts when you approach or exceed your budget limits.</p>
+      </div>
+      <div class="col-md-4">
+        <h2>Visualize Data</h2>
+        <p>View interactive charts and graphs to analyze your spending patterns. Gain insights into your financial habits.</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

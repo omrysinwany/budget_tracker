@@ -10,7 +10,7 @@ class UserInput(forms.Form):
         unique_names_set = set(Expense.objects.filter(user__user=user).values_list('name', flat=True).distinct())
         self.fields['name'] = forms.ChoiceField(choices=[(name, name) for name in unique_names_set])
 
-class NewExpense(forms.Form):
+class NewExpenseForm(forms.Form):
     CATEGORIES = [
         'Groceries',
         'Utilities',
@@ -20,18 +20,38 @@ class NewExpense(forms.Form):
     ]
     EMPTY_CHOICE = ('', '---------')
 
-    Name = forms.CharField(max_length=200,required=True, widget=forms.TextInput(attrs={'placeholder': 'Your name'}))
-    Amount = forms.DecimalField(max_digits=10, decimal_places=2, required=True)
-    Category = forms.ChoiceField(choices=[EMPTY_CHOICE] + [(category, category) for category in CATEGORIES], required=True)
-    Notes = forms.CharField(required=False, label='', widget=forms.Textarea(attrs={'placeholder': 'Optional: Add any additional notes.', 'rows': 5}))
+    name = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Your name'})
+    )
+    amount = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        required=True
+    )
+    category = forms.ChoiceField(
+        choices=[EMPTY_CHOICE] + [(category, category) for category in CATEGORIES],
+        required=True
+    )
+    notes = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.Textarea(attrs={'placeholder': 'Optional: Add any additional notes.', 'rows': 5})
+    )
 
-    def clean_Name(self):
-        name = self.cleaned_data.get('Name', '')
+    def clean_name(self):
+        name = self.cleaned_data.get('name', '')
         return name.capitalize()
 
-    def clean_Category(self):
-        category = self.cleaned_data.get('Category', '')
+    def clean_category(self):
+        category = self.cleaned_data.get('category', '')
         return category.capitalize()
+
+    # If you need to use Meta, it should be an inner class
+    class Meta:
+        model = Expense
+        fields = ['name', 'amount', 'category', 'notes']
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)

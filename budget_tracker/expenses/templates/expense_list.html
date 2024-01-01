@@ -1,7 +1,40 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
+
 {% block title %} Expense List Page {% endblock %}
-{% block content %} <h1> Expense List</h1>
-    {% for expense in expenses %}
-        <p>{{ expense.name }} : <strong>{{ expense.amount }}$</strong>  {{ expense.category }}&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [{{ expense.date }}]</p>
-    {% endfor %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1>Expense List</h1>
+      <a href="{% url 'add_expense' %}" class="btn btn-success">New Expense</a>
+    </div>
+    <div class="list-group">
+      {% for expense in expenses %}
+        <div class="list-group-item">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ expense.name }}</h5>
+            <small>{{ expense.date }}</small>
+          </div>
+          <p class="mb-1">Amount: <strong>{{ expense.amount }}$</strong></p>
+          <p class="mb-1">Category: {{ expense.category }}</p>
+          
+          {% if expense.notes %}
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseNotes{{ expense.id }}" aria-expanded="false" aria-controls="collapseNotes{{ expense.id }}">
+              Notes
+            </button>
+            <div class="collapse" id="collapseNotes{{ expense.id }}">
+              <p class="mb-1">{{ expense.notes }}</p>
+            </div>
+          {% endif %}
+          
+          <div class="mt-2"> <!-- Add margin top to create space between notes and buttons -->
+            <div class="btn-group" role="group">
+              <a href="{% url 'modify_expense' expense.id %}" class="btn btn-warning btn-sm">Modify</a>
+              <a href="{% url 'delete_expense' expense.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 {% endblock %}

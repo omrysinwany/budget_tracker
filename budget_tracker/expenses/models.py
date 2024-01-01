@@ -7,6 +7,14 @@ class Users(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True)
+    # Add other fields as needed for your user profile
+
+    def __str__(self):
+        return self.user.username
 
 class Expense(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
