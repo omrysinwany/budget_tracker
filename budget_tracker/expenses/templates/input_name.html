@@ -1,9 +1,20 @@
-{% extends "base.html" %} 
-{% block title %} Personal Expense Page {% endblock %}
-{% block content %} <h1>Personal Expense List</h1>
-    <form method="POST">
-        {% csrf_token %}
-         {{form}}
-        <button type="submit" class="btn btn-primary" name="save">Submit</button>
+{% extends "base.html" %}
+
+{% block title %} Personal Expenses Page {% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1>Personal Expenses Page</h1>
+
+    <form method="POST" class="form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form.name.id_for_label }}">Select Name:</label>
+        {{ form.name }}
+        <small class="form-text text-muted">Choose a name from the list to view personal expenses.</small>
+      </div>
+
+      <button type="submit" class="btn btn-primary" name="save">Submit</button>
     </form>
+  </div>
 {% endblock %}

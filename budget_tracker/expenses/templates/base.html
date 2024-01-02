@@ -24,13 +24,27 @@
         }
 
         .navbar-toggler-icon {
-            background-color: #fff;
+            color: #fff;
+            border: none;
+            outline: none;
+            box-shadow: none;
+            background-color: transparent;
+        }
+
+        .navbar-toggler-icon i {
+            font-size: 1.5rem; /* Adjust the font size as needed */
         }
 
         .navbar-nav .nav-link {
             color: #fff;
             margin: 0 1rem;
-            font-size: 1.1rem;
+            font-size: 1.0rem;
+            text-align: center; /* Center the text */
+            transition: background-color 0.3s ease; /* Add smooth transition */
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1); /* Light background color on hover */
         }
 
         .navbar-text {
@@ -49,9 +63,9 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand" href="#">My Budget Tracker App</a>
+        <a class="navbar-brand" href="/home">My Budget Tracker App</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
@@ -62,7 +76,7 @@
                     <a class="nav-link" href={% url 'expense_list' %}>View Expenses</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href={% url 'user_input_name' %}>View Personal Expense</a>
+                    <a class="nav-link" href={% url 'user_input_name' %}>View Personal Expenses</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href={% url 'combined_statistics' %}>Statistic</a>
@@ -79,7 +93,7 @@
         <div class="navbar-nav ml-auto">
             {% if user.is_authenticated %}
             <span class="navbar-text mr-3">
-                <i class="fas fa-user"></i> Logged in as {{ user.username }} | 
+                <i class="fas fa-user"></i> Logged in as {{ user.username }}
             </span>
             <li class="nav-item">
                 <a class="nav-link" href="/logout">
@@ -93,7 +107,7 @@
     <div class="container mt-4">
         {% block content %}{% endblock %}
     </div>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 </body>

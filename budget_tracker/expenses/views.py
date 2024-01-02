@@ -1,4 +1,5 @@
 import os
+from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -42,25 +43,12 @@ def user_profile(request):
         form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Your profile has been successfully updated.')
             return redirect('user_profile')
     else:
         form = UserProfileForm(instance=user_profile)
 
     return render(request, 'user_profile.html', {'form': form})
-
-@login_required(login_url="/login")
-def update_profile(request):
-    user_profile = request.user.userprofile
-    
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user_profile)
-        if form.is_valid():
-            form.save()
-            return redirect('user_profile')
-    else:
-        form = UserProfileForm(instance=user_profile)
-
-    return render(request, 'update_profile.html', {'form': form})
 
 @login_required(login_url="/login")
 def change_password(request):
@@ -180,8 +168,6 @@ def user_input_name(request):
 
 @login_required(login_url="/login")
 def statistics_view(request):
-    print("Entering user_statistics_view function")
-    
     # Fetch user-specific expenses
     user_expenses = Expense.objects.filter(user__user=request.user)
     
@@ -227,15 +213,11 @@ def statistics_view(request):
 
 @login_required(login_url="/login")
 def user_statistics_view(request):
-    print("Entering user_statistics_view function")
-
     # Fetch user-specific expenses
     user_expenses = Expense.objects.filter(user__user=request.user)
 
     # Create a DataFrame from the expenses
     df = pd.DataFrame(list(user_expenses.values()))
-    print("DataFrame created successfully")
-    print("DataFrame columns:", df.columns)  # Print the columns of the DataFrame
 
     # Calculate statistics
     total_expenses = df['amount'].sum()

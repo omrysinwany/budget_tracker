@@ -5,11 +5,26 @@
 {% block content %}
   <div class="container mt-4">
     <h1>User Profile</h1>
-    
+
+    <!-- Display messages -->
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  
+
     <!-- Display user profile information -->
     <div class="mt-4">
       <h2>Profile Information</h2>
-      <form method="post" action="{% url 'update_profile' %}">
+      <form method="post" action="{% url 'user_profile' %}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-success mt-2">Update Profile</button>
