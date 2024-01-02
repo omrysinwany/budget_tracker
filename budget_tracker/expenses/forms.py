@@ -72,7 +72,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['name', 'email', 'date_of_birth', 'bio', 'profile_picture']
+        fields = ['name', 'email', 'date_of_birth', 'bio']
 
 class CustomPasswordChangeForm(BasePasswordChangeForm):
     new_password1 = forms.CharField(

@@ -187,17 +187,11 @@ def statistics_view(request):
     
     # Create a DataFrame from the expenses
     df = pd.DataFrame(list(user_expenses.values()))
-    print("DataFrame created successfully")
-    print("DataFrame columns:", df.columns)  # Print the columns of the DataFrame
 
-    # Add some debug prints to check the structure of df
-    print("DataFrame shape:", df.shape)
-    print("DataFrame head:", df.head())
-    
     # Calculate statistics
     total_expenses = df['amount'].sum()
     average_expense = df['amount'].mean()
-    category_counts = df['category'].value_counts()
+    name_counts = df['name'].value_counts()
 
     # Define the directory for saving images
     images_dir = os.path.join(settings.BASE_DIR, 'expenses', 'static', 'images')
@@ -209,23 +203,23 @@ def statistics_view(request):
     plt.switch_backend('Agg')
 
     # Plot a bar chart of expenses by category
-    plt.bar(category_counts.index, category_counts.values)
-    plt.title('Expense Distribution by Category')
-    plt.xlabel('Category')
+    plt.bar(name_counts.index, name_counts.values)
+    plt.title('Expense Distribution by Name')
+    plt.xlabel('Name')
     plt.ylabel('Number of Expenses')
     plt.xticks(rotation=45)
     plt.tight_layout()
     
     # Save the plot as an image
-    category_counts_plot = 'category_counts_plot.png'
-    plt.savefig(os.path.join(images_dir, category_counts_plot))
+    name_counts_plot = 'name_counts_plot.png'
+    plt.savefig(os.path.join(images_dir, name_counts_plot))
     plt.close()
 
     # Prepare context for rendering the template
     context = {
         'total_expenses': total_expenses,
         'average_expense': average_expense,
-        'category_counts_plot': category_counts_plot,
+        'name_counts_plot': name_counts_plot,
     }
 
     # Render the template with the context
@@ -242,10 +236,6 @@ def user_statistics_view(request):
     df = pd.DataFrame(list(user_expenses.values()))
     print("DataFrame created successfully")
     print("DataFrame columns:", df.columns)  # Print the columns of the DataFrame
-
-    # Add some debug prints to check the structure of df
-    print("DataFrame shape:", df.shape)
-    print("DataFrame head:", df.head())
 
     # Calculate statistics
     total_expenses = df['amount'].sum()
@@ -301,7 +291,7 @@ def combined_statistics(request):
 
     # Combine the context dictionaries
     combined_context = {
-        'category_counts_plot': bar_chart_context['category_counts_plot'],
+        'name_counts_plot': bar_chart_context['name_counts_plot'],
         'category_distribution_plot': pie_chart_context['category_distribution_plot'],
         'total_expenses': bar_chart_context['total_expenses'],
     }
