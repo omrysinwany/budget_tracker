@@ -74,26 +74,6 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['name', 'email', 'date_of_birth', 'bio', 'profile_picture']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Customize form fields if needed
-
-    def save(self, commit=True):
-        # Save the form without committing to the database
-        profile = super().save(commit=False)
-
-        # Get the associated user's email
-        user_email = self.instance.user.email if self.instance.user else None
-
-        # Set the email field with the user's email
-        profile.email = user_email
-
-        if commit:
-            # Save to the database if commit is True
-            profile.save()
-
-        return profile
-
 class CustomPasswordChangeForm(BasePasswordChangeForm):
     new_password1 = forms.CharField(
         label="New password",

@@ -143,10 +143,10 @@ def add_expense(request):
         if form.is_valid():
             cleaned_data = form.cleaned_data
             
-            name = cleaned_data.get("Name", "")
-            amount = cleaned_data.get("Amount", 0)
-            category = cleaned_data.get("Category", "")
-            notes = cleaned_data.get("Notes", "")
+            name = cleaned_data.get("name", "")
+            amount = cleaned_data.get("amount", 0)
+            category = cleaned_data.get("category", "")
+            notes = cleaned_data.get("notes", "")
 
             new_expense = Expense(name=name, amount=amount, category=category, notes=notes,date=date.today(), user=users_instance)
             new_expense.save()
