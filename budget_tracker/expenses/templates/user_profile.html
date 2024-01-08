@@ -4,8 +4,9 @@
 
 {% block content %}
   <div class="container mt-4">
-    <h1>User Profile</h1>
-
+    <h1>Your Profile</h1>
+    <p>Remaining Budget: ${{ user_profile.budget }}</p>
+    
     <!-- Display messages -->
     {% if messages %}
     <div>

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} Expense List Page {% endblock %}
+{% block title %} Expenses List Page {% endblock %}
 
 {% block content %}
   <div class="container mt-4">
@@ -8,6 +8,33 @@
       <h1>Expense List</h1>
       <a href="{% url 'add_expense' %}" class="btn btn-success btn-lg"><i class="fas fa-plus"></i> New Expense</a>
     </div>
+    {% if messages %}
+      <div>
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if user_profile.budget > 0 %}
+    <!-- Remaining Budget -->
+    <p>Remaining Budget: ${{ user_profile.budget }}</p>
+    {% endif %}
+    <!-- Update Budget Form -->
+    <form method="post" action="{% url 'update_budget' %}" class="mb-3">
+      {% csrf_token %}
+      <div class="input-group">
+        <input type="number" name="budget" class="form-control" placeholder="Enter new budget">
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-primary">Update Budget</button>
+        </div>
+      </div>
+    </form>
+
     <div class="list-group">
       {% for expense in expenses %}
         <div class="list-group-item expense-card rounded">
