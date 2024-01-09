@@ -79,25 +79,302 @@ def user_profile(request):
 
 @login_required(login_url="/login")
 def expense_list(request):
-    expenses = Expense.objects.all()
-    return render(request, 'expenses/expense_list.html', {'expenses': expenses})
+    try:
+        users_instance = Users.objects.get(user=request.user)
+        user_profile = get_object_or_404(UserProfile, user=request.user)
+        expenses = Expense.objects.filter(user=users_instance)
 
+        if not expenses.exists():
+            # If the user has no expenses, redirect to another template
+            return render(request, 'no_expenses.html')
+    except Users.DoesNotExist:
+        # Handle the case where the Users instance does not exist
+        return render(request, 'no_expenses.html')
 
-def expense_detail(request, expense_id):
-    expense = Expense.objects.get(id=expense_id)
-    return render(request, 'expenses/expense_detail.html', {'expense': expense})
+    return render(request, 'expense_list.html', {'expenses': expenses, 'user_profile': user_profile})
 
+def modify_expense(request, expense_id):
+    expense = get_object_or_404(Expense, id=expense_id)
 
-def expense_statistics(request):
-    expenses = Expense.objects.all()
-    data = {
-        'Amount': [expense.amount for expense in expenses],
-        'Category': [expense.Category.name for expense in expenses],
+    if request.method == 'POST':
+        form = NewExpenseForm(request.POST)
+        if form.is_valid():
+            # Update the expense object with the form data
+            expense.name = form.cleaned_data['name']
+            expense.amount = form.cleaned_data['amount']
+            expense.category = form.cleaned_data['category']
+            expense.notes = form.cleaned_data['notes']
+            
+            user_profile = UserProfile.objects.get(user=request.user)
+            remaining_budget = user_profile.budget - expense.amount
+
+            if remaining_budget < 0 and user_profile.budget != 0:
+                print("<0")
+                messages.warning(request, 'Failed to add the expense. This expense exceeds the budget.')
+            
+            elif user_profile.budget == 0:
+                print("0")
+                messages.success(request, 'Expense has been successfully added..')
+                expense.save()
+                return redirect('expense_list')
+
+            else:
+                print(">0")
+                messages.success(request, 'Expense has been successfully added..')
+                expense.save()
+                # Update the user's remaining budget
+                user_profile.budget = remaining_budget
+                user_profile.save()
+        
+            return redirect('expense_list')
+    else:
+        # Populate the form with existing expense data
+        form = NewExpenseForm(initial={
+            'name': expense.name,
+            'amount': expense.amount,
+            'category': expense.category,
+            'notes': expense.notes,
+            'date': expense.date,
+        })
+
+    return render(request, 'modify_expense.html', {'form': form, 'expense': expense})
+
+def delete_expense(request, expense_id):
+    # Get the expense object or return a 404 response if not found
+    expense = get_object_or_404(Expense, id=expense_id)
+
+    # Delete the expense
+    expense.delete()
+
+    # Redirect to the expense list page or any other desired page
+    return redirect('expense_list')
+
+@login_required(login_url="/login")
+def add_expense(request):
+    users_instance, created = Users.objects.get_or_create(user=request.user)
+    users_instance = Users.objects.get(user=request.user)
+
+    if request.method == "POST":
+        form = NewExpenseForm(request.POST)
+
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+
+            name = cleaned_data.get("name", "")
+            amount = cleaned_data.get("amount", 0)
+            category = cleaned_data.get("category", "")
+            notes = cleaned_data.get("notes", "")
+
+            # Check if adding the expense exceeds the budget
+            user_profile = UserProfile.objects.get(user=request.user)
+            remaining_budget = user_profile.budget - amount
+
+            if remaining_budget < 0 and user_profile.budget != 0:
+                print("<0")
+                messages.warning(request, 'Failed to add the expense. This expense exceeds the budget.')
+            
+            elif user_profile.budget == 0:
+                print("0")
+                messages.success(request, 'Expense has been successfully added..')
+                new_expense = Expense(name=name, amount=amount, category=category, notes=notes, date=date.today(), user=users_instance)
+                new_expense.save()
+                return redirect('expense_list')
+
+            else:
+                print(">0")
+                messages.success(request, 'Expense has been successfully added..')
+                new_expense = Expense(name=name, amount=amount, category=category, notes=notes, date=date.today(), user=users_instance)
+                new_expense.save()
+                # Update the user's remaining budget
+                user_profile.budget = remaining_budget
+                user_profile.save()
+        
+            return redirect('expense_list')
+
+    else:
+        form = NewExpenseForm()
+
+    return render(request, 'add_expense.html', {'form': form})
+
+@login_required(login_url="/login")
+def make_budget(request):
+    if request.method == 'POST':
+        new_budget = request.POST.get('budget')
+        user_instance = request.user.userprofile  # Adjust accordingly based on your user model
+              
+        try:
+            # Ensure the input is a valid number
+            new_budget_float = float(new_budget)
+            
+            # Update the user's budget
+            user_instance.budget = new_budget_float
+            user_instance.save()
+            
+            messages.success(request, 'Budget updated successfully.')
+            
+            
+        except ValueError:
+            messages.error(request, 'Invalid budget value. Please enter a valid number.')
+
+    # Redirect to the add_expense page
+    return redirect('add_expense')
+
+@login_required(login_url="/login")
+def update_budget(request):
+    if request.method == 'POST':
+        new_budget = request.POST.get('budget')
+        user_instance = request.user.userprofile  # Adjust accordingly based on your user model
+              
+        try:
+            # Ensure the input is a valid number
+            new_budget_float = float(new_budget)
+            
+            # Update the user's budget
+            user_instance.budget = new_budget_float
+            user_instance.save()
+            
+            messages.success(request, 'Budget updated successfully.')
+            
+        except ValueError:
+            messages.error(request, 'Invalid budget value. Please enter a valid number.')
+
+    return redirect('expense_list')
+
+@login_required(login_url="/login")
+def expense_detail(request, name):
+    related_expenses = Expense.objects.filter(name=name)
+    return render(request, 'expense_detail.html', {'related_expenses': related_expenses})
+
+@login_required(login_url="/login")
+def user_input_name(request):
+    url = "/home"  # Set a default URL
+
+    if request.method == "POST":
+        current_user = request.user
+        form = UserInput(user=current_user, data=request.POST)
+
+        if form.is_valid():
+            expense_instance = form.cleaned_data["name"]
+            url = reverse('expense_detail', args=[expense_instance])
+
+        return HttpResponseRedirect(url)
+    else: 
+        form = UserInput(user=request.user)
+    return render(request, 'input_name.html', {'form': form})
+
+@login_required(login_url="/login")
+def statistics_view(request):
+    # Fetch user-specific expenses
+    user_expenses = Expense.objects.filter(user__user=request.user)
+    
+    # Create a DataFrame from the expenses
+    df = pd.DataFrame(list(user_expenses.values()))
+
+    # Calculate statistics
+    total_expenses = df['amount'].sum()
+    average_expense = df['amount'].mean()
+    name_counts = df['name'].value_counts()
+
+    # Define the directory for saving images
+    images_dir = os.path.join(settings.BASE_DIR, 'expenses', 'static', 'images')
+    
+    # Ensure the directory exists, create it if not
+    os.makedirs(images_dir, exist_ok=True)
+
+    # Switch backend to 'Agg' to avoid main thread issues
+    plt.switch_backend('Agg')
+
+    # Plot a bar chart of expenses by category
+    plt.bar(name_counts.index, name_counts.values)
+    plt.title('Expense Distribution by Name')
+    plt.xlabel('Name')
+    plt.ylabel('Number of Expenses')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    
+    # Save the plot as an image
+    name_counts_plot = 'name_counts_plot.png'
+    plt.savefig(os.path.join(images_dir, name_counts_plot))
+    plt.close()
+
+    # Prepare context for rendering the template
+    context = {
+        'total_expenses': total_expenses,
+        'average_expense': average_expense,
+        'name_counts_plot': name_counts_plot,
     }
-    df = pd.DataFrame(data)
-    statistics = {
-        'Total': df['Amount'].sum(),
-        'Average': df['Amount'].mean(),
-        'Category_Count': df['Category'].value_counts().to_dict(),
+
+    # Render the template with the context
+    return context
+
+@login_required(login_url="/login")
+def user_statistics_view(request):
+    # Fetch user-specific expenses
+    user_expenses = Expense.objects.filter(user__user=request.user)
+
+    # Create a DataFrame from the expenses
+    df = pd.DataFrame(list(user_expenses.values()))
+
+    # Calculate statistics
+    total_expenses = df['amount'].sum()
+    average_expense = df['amount'].mean()
+    category_counts = df['category'].value_counts()
+
+     # Define the directory for saving images
+    images_dir = os.path.join(settings.BASE_DIR, 'expenses', 'static', 'images')
+    
+    # Ensure the directory exists, create it if not
+    os.makedirs(images_dir, exist_ok=True)
+
+    # Switch backend to 'Agg' to avoid main thread issues
+    plt.switch_backend('Agg')
+
+    # Create a pie chart of expenses by category
+    plt.pie(category_counts, labels=category_counts.index, autopct='%1.1f%%', startangle=90)
+    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle
+    plt.title('Expense Distribution by Category')
+
+     # Save the plot as an image
+    category_distribution_plot = 'category_distribution_plot.png'
+    plt.savefig(os.path.join(images_dir, category_distribution_plot))
+    plt.close()
+
+    # Prepare context for rendering the template
+    context = {
+        'total_expenses': total_expenses,
+        'average_expense': average_expense,
+        'category_distribution_plot': category_distribution_plot,
     }
-    return render(request, 'expenses/expense_statistics.html', {'statistics': statistics})
+
+    # Render the template with the context
+    return context
+
+@login_required(login_url="/login")
+def combined_statistics(request):
+
+    try:
+        users_instance = Users.objects.get(user=request.user)
+        expenses = Expense.objects.filter(user=users_instance)
+        user_profile = get_object_or_404(UserProfile, user=request.user)
+
+        if not expenses.exists():
+            # If the user has no expenses, redirect to another template
+            return render(request, 'no_expenses.html')
+    except Users.DoesNotExist:
+        # Handle the case where the Users instance does not exist
+        return render(request, 'no_expenses.html')
+
+     # Call each statistics function and get the context dictionaries
+    bar_chart_context = statistics_view(request)
+    pie_chart_context = user_statistics_view(request)
+
+    # Combine the context dictionaries
+    combined_context = {
+        'name_counts_plot': bar_chart_context['name_counts_plot'],
+        'category_distribution_plot': pie_chart_context['category_distribution_plot'],
+        'total_expenses': bar_chart_context['total_expenses'],
+        'user_profile': user_profile,
+    }
+
+    # Render a template with the combined context
+    return render(request, 'statistic.html', combined_context)

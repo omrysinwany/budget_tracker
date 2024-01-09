@@ -19,9 +19,6 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-    def __str__(self):
-        return self.name
-
 class Expense(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -32,4 +29,3 @@ class Expense(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.amount} - {self.category}"
-
