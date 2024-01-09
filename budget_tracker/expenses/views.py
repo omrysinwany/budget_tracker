@@ -1,3 +1,5 @@
+# views.py
+
 import os
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render, HttpResponse, HttpResponseRedirect
@@ -15,12 +17,15 @@ from django.urls import reverse_lazy
 from django.conf import settings
 
 def home(request):
+    """Render the home page."""
     return render(request, "home.html")
 
 def no_expenses(request):
+    """Render a page for users with no expenses."""
     return render(request, "no_expenses.html")
 
 def sign_up(request):
+    """Handle user registration."""
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -37,6 +42,7 @@ def sign_up(request):
 
 @login_required(login_url="/login")
 def change_password(request):
+    """Handle password change for logged-in users."""
     if request.method == 'POST':
         form = CustomPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -48,14 +54,17 @@ def change_password(request):
     return render(request, 'change_password.html', {'form': form})
 
 class CustomPasswordResetView(PasswordResetView):
+    """Customize the password reset view."""
     template_name = 'registration/password_reset_form.html'
     success_url = reverse_lazy('password_reset_done')
 
 def reset_password(request):
+    """Handle password reset request."""
     return CustomPasswordResetView.as_view()(request)
 
 @login_required(login_url="/login")
 def user_profile(request):
+    """View and update user profile."""
     user_profile = UserProfile.objects.get(user=request.user)
 
     if request.method == 'POST':
@@ -79,6 +88,7 @@ def user_profile(request):
 
 @login_required(login_url="/login")
 def expense_list(request):
+    """List the expenses of the logged-in user."""
     try:
         users_instance = Users.objects.get(user=request.user)
         user_profile = get_object_or_404(UserProfile, user=request.user)
@@ -94,6 +104,7 @@ def expense_list(request):
     return render(request, 'expense_list.html', {'expenses': expenses, 'user_profile': user_profile})
 
 def modify_expense(request, expense_id):
+    """Modify an existing expense."""
     expense = get_object_or_404(Expense, id=expense_id)
 
     if request.method == 'POST':
@@ -140,6 +151,7 @@ def modify_expense(request, expense_id):
     return render(request, 'modify_expense.html', {'form': form, 'expense': expense})
 
 def delete_expense(request, expense_id):
+    """Delete an existing expense."""
     # Get the expense object or return a 404 response if not found
     expense = get_object_or_404(Expense, id=expense_id)
 
@@ -151,6 +163,7 @@ def delete_expense(request, expense_id):
 
 @login_required(login_url="/login")
 def add_expense(request):
+    """Add a new expense for the logged-in user."""
     users_instance, created = Users.objects.get_or_create(user=request.user)
     users_instance = Users.objects.get(user=request.user)
 
@@ -198,6 +211,7 @@ def add_expense(request):
 
 @login_required(login_url="/login")
 def make_budget(request):
+    """Set or update the budget for the logged-in user."""
     if request.method == 'POST':
         new_budget = request.POST.get('budget')
         user_instance = request.user.userprofile  # Adjust accordingly based on your user model
@@ -212,7 +226,6 @@ def make_budget(request):
             
             messages.success(request, 'Budget updated successfully.')
             
-            
         except ValueError:
             messages.error(request, 'Invalid budget value. Please enter a valid number.')
 
@@ -221,6 +234,7 @@ def make_budget(request):
 
 @login_required(login_url="/login")
 def update_budget(request):
+    """Update the budget for the logged-in user."""
     if request.method == 'POST':
         new_budget = request.POST.get('budget')
         user_instance = request.user.userprofile  # Adjust accordingly based on your user model
@@ -242,11 +256,13 @@ def update_budget(request):
 
 @login_required(login_url="/login")
 def expense_detail(request, name):
+    """Display details of expenses with a specific name."""
     related_expenses = Expense.objects.filter(name=name)
     return render(request, 'expense_detail.html', {'related_expenses': related_expenses})
 
 @login_required(login_url="/login")
 def user_input_name(request):
+    """Handle user input for expense name and redirect to related expenses."""
     url = "/home"  # Set a default URL
 
     if request.method == "POST":
@@ -264,6 +280,7 @@ def user_input_name(request):
 
 @login_required(login_url="/login")
 def statistics_view(request):
+    """Generate and return context for statistics view."""
     # Fetch user-specific expenses
     user_expenses = Expense.objects.filter(user__user=request.user)
     
@@ -304,11 +321,11 @@ def statistics_view(request):
         'name_counts_plot': name_counts_plot,
     }
 
-    # Render the template with the context
     return context
 
 @login_required(login_url="/login")
 def user_statistics_view(request):
+    """Generate and return context for user-specific statistics view."""
     # Fetch user-specific expenses
     user_expenses = Expense.objects.filter(user__user=request.user)
 
@@ -346,12 +363,11 @@ def user_statistics_view(request):
         'category_distribution_plot': category_distribution_plot,
     }
 
-    # Render the template with the context
     return context
 
 @login_required(login_url="/login")
 def combined_statistics(request):
-
+    """Combine multiple statistics and render the statistics template."""
     try:
         users_instance = Users.objects.get(user=request.user)
         expenses = Expense.objects.filter(user=users_instance)

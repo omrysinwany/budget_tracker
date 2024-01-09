@@ -1,17 +1,41 @@
+# forms.py
+
 from datetime import date
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm as BasePasswordChangeForm
 from django.contrib.auth.models import User
 from .models import Expense, UserProfile
-from django.contrib.auth.forms import PasswordChangeForm as BasePasswordChangeForm
 
 class UserInput(forms.Form):
+    """
+    A form for user input, specifically for choosing from unique expense names.
+
+    Methods:
+    - __init__: Initializes the form with choices based on unique expense names for a specific user.
+    """
     def __init__(self, user, *args, **kwargs):
         super(UserInput, self).__init__(*args, **kwargs)
         unique_names_set = set(Expense.objects.filter(user__user=user).values_list('name', flat=True).distinct())
         self.fields['name'] = forms.ChoiceField(choices=[(name, name) for name in unique_names_set])
 
 class NewExpenseForm(forms.Form):
+    """
+    A form for creating a new expense.
+
+    Fields:
+    - name: The name or description of the expense.
+    - amount: The amount of the expense.
+    - category: The category of the expense (selectable from predefined choices).
+    - notes: Additional notes related to the expense (optional).
+
+    Methods:
+    - clean_name: Capitalizes the name input.
+    - clean_category: Capitalizes the category input.
+
+    Meta:
+    - model: The associated model for the form.
+    - fields: The fields to include in the form.
+    """
     CATEGORIES = [
         'Groceries',
         'Utilities',
@@ -49,20 +73,39 @@ class NewExpenseForm(forms.Form):
         category = self.cleaned_data.get('category', '')
         return category.capitalize()
 
-    # If you need to use Meta, it should be an inner class
     class Meta:
         model = Expense
         fields = ['name', 'amount', 'category', 'notes']
 
 class RegisterForm(UserCreationForm):
+    """
+    A form for user registration, extending the built-in UserCreationForm.
+
+    Fields:
+    - email: The email address of the user.
+
+    Meta:
+    - model: The associated model for the form.
+    - fields: The fields to include in the form.
+    """
     email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = ["username", "email", "password1", "password2"	]
+        fields = ["username", "email", "password1", "password2"]
 
 class UserProfileForm(forms.ModelForm):
+    """
+    A form for updating user profile information.
 
+    Fields:
+    - date_of_birth: The date of birth of the user (selectable from a date picker).
+    - bio: A text field for the user's biography (optional).
+
+    Meta:
+    - model: The associated model for the form.
+    - fields: The fields to include in the form.
+    """
     date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     bio = forms.CharField(
         required=False,
@@ -75,6 +118,16 @@ class UserProfileForm(forms.ModelForm):
         fields = ['name', 'email', 'date_of_birth', 'bio']
 
 class CustomPasswordChangeForm(BasePasswordChangeForm):
+    """
+    A custom form for changing the user's password, extending the built-in PasswordChangeForm.
+
+    Fields:
+    - new_password1: The new password input.
+    - new_password2: Confirmation of the new password input.
+
+    Meta:
+    - model: The associated model for the form (User).
+    """
     new_password1 = forms.CharField(
         label="New password",
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
