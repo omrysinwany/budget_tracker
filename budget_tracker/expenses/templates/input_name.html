@@ -4,7 +4,9 @@
 
 {% block content %}
   <div class="container mt-4">
-    <h1>Personal Expenses Page</h1>
+    <div class="jumbotron">
+      <h1 class="display-4 mb-3" style="font-family: 'Your Chosen Font'; font-size: 2.5rem; font-weight: bold;">Personal Expenses Page</h1>
+    </div>
 
     <form method="POST" class="form">
       {% csrf_token %}

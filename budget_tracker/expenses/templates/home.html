@@ -1,43 +1,84 @@
 {% extends "base.html" %}
 
-{% block title %} Home Page {% endblock %}
+{% block title %} Welcome to Your Budget Tracker App! {% endblock %}
 
 {% block content %}
   <div class="container mt-4">
     <div class="jumbotron">
-      <h1 class="display-4">Welcome to Your Budget Tracker App!</h1>
-      <p class="lead">
-        Managing your finances made easy. Stay on top of your expenses and take control of your budget with our Budget Tracker App.
+      <h1 class="display-4 mb-3" style="font-family: 'Your Chosen Font'; font-size: 2.5rem; font-weight: bold;">Welcome to Your Budget Tracker App!</h1>
+      <p class="lead" style="margin-bottom: 20px;">
+        Streamline your financial journey with our Budget Tracker App. Effortlessly oversee expenses, establish budgets, and gain insights into your spending habits.
       </p>
       {% if user.is_authenticated %}
-        <p class="lead">Explore the features using the navigation bar above.</p>
+        <p class="lead" style="color: #007bff; font-weight: bold;">Discover the app's features through the user-friendly navigation bar above.</p>
       {% else %}
-        <hr class="my-4">
-        <p>Ready to take charge of your finances?</p>
-        <ul>
-          <li>Track Your Expenses</li>
-          <li>Create Personal Budgets</li>
-          <li>Visualize Spending Patterns</li>
-          <li>Receive Financial Insights</li>
+        <hr class="my-3">
+        <p>Ready to take control of your finances?</p>
+        <ul class="list-unstyled">
+          <li class="mb-2">Effortlessly Track Expenses</li>
+          <li class="mb-2">Create Personalized Budgets</li>
+          <li class="mb-2">Visualize Spending Patterns</li>
+          <li class="mb-2">Receive Actionable Financial Insights</li>
         </ul>
-        <p>Sign up now and start your journey towards financial wellness.</p>
-        <a href="/sign-up" class="btn btn-primary btn-lg">Sign Up</a>
+        <p class="mb-3">Sign up now and embark on your journey towards financial well-being.</p>
+        <a href="/sign-up" class="btn btn-primary btn-lg" style="background-color: #28a745; border-color: #28a745;">Sign Up</a>
       {% endif %}
     </div>
 
     <div class="row">
-      <div class="col-md-4">
-        <h2>Track Expenses</h2>
-        <p>Record your daily expenses effortlessly. Categorize your spending to get a clear overview of where your money is going.</p>
+      <div class="col-md-4 mb-4">
+        <h2 class="mb-3">Track Expenses</h2>
+        <p class="mb-3">Record daily expenses effortlessly. Categorize spending for a clear overview of your money flow.</p>
+        <div class="animate__animated animate__fadeInUp">
+          <img src="/static/images/coins.jpg" alt="Track Expenses" class="img-fluid img-hover">
+        </div>
       </div>
-      <div class="col-md-4">
-        <h2>Create Budgets</h2>
-        <p>Set monthly budgets for different categories. Receive alerts when you approach or exceed your budget limits.</p>
+      <div class="col-md-4 mb-4">
+        <h2 class="mb-3">Create Budgets</h2>
+        <p class="mb-3">Set monthly budgets for your expenses. Stay informed when approaching or exceeding your limits.</p>
+        <div class="animate__animated animate__fadeInUp">
+          <img src="/static/images/budget.jpg" alt="Create Budgets" class="img-fluid img-hover">
+        </div>
       </div>
-      <div class="col-md-4">
-        <h2>Visualize Data</h2>
-        <p>View interactive charts and graphs to analyze your spending patterns. Gain insights into your financial habits.</p>
+      <div class="col-md-4 mb-4">
+        <h2 class="mb-3">Visualize Data</h2>
+        <p class="mb-3">Explore charts and graphs for insights into your spending patterns.</p>
+        <div class="animate__animated animate__fadeInUp">
+          <img src="/static/images/pie.jpeg" alt="Visualize Data" class="img-fluid img-hover">
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Add the following script to include the animate.css library for animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"></script>
+
+  <style>
+    /* Custom styles for the images and hover effects */
+    img {
+      border-radius: 0.25rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Custom animation for fading in */
+    .animate__fadeInUp {
+      animation: fadeInUp 0.75s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 {% endblock %}

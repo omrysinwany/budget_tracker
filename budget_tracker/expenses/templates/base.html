@@ -10,54 +10,103 @@
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
         }
-
+    
         .navbar {
-            background-color: #007bff;
-            padding: 1rem 2rem;
+            background-color: #004080;
+            padding: 0.9rem 2rem;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         }
-
+    
         .navbar-brand {
             color: #fff;
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            margin-right: 2rem;
         }
-
+    
         .navbar-toggler-icon {
-            color: #fff;
             border: none;
             outline: none;
-            box-shadow: none;
             background-color: transparent;
+            color: #fff;
         }
-
+    
         .navbar-toggler-icon i {
-            font-size: 1.5rem; /* Adjust the font size as needed */
+            font-size: 1.5rem;
         }
-
+    
         .navbar-nav .nav-link {
             color: #fff;
             margin: 0 1rem;
-            font-size: 1.0rem;
-            text-align: center; /* Center the text */
-            transition: background-color 0.3s ease; /* Add smooth transition */
+            font-size: 0.9rem;
+            text-align: center;
+            transition: color 0.3s ease;
         }
-
+    
         .navbar-nav .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.1); /* Light background color on hover */
+            color: #007bff;
         }
-
+    
         .navbar-text {
             color: #fff;
-            margin-right: 1.5rem;
+            margin-right: 2rem;
+            font-size: 0.9rem;
         }
-
+    
         .container {
-            background-color: #fff;
+            background-color: #ffffff;
             padding: 2rem;
             border-radius: 0.5rem;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 2rem;
+        }
+    
+        /* Custom styling for the navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+    
+        .nav-link {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    
+        .navbar-brand:hover {
+            color: #fff;
+            text-decoration: none;
+        }
+    
+        .navbar-nav .nav-link {
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+    
+        .navbar-nav .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #007bff;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+    
+        .navbar-nav .nav-link:hover::before {
+            transform: scaleX(1);
+            transform-origin: bottom left;
         }
     </style>
 </head>

@@ -1,31 +1,52 @@
-<!-- statistic.html -->
-
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %} Financial Statistics {% endblock %}
+
 {% block content %}
   <div class="container mt-4">
+    <div class="jumbotron">
+      <div class="col-md-12 text-center">
+        <h1 class="display-4 mb-3" style="font-family: 'Your Chosen Font'; font-size: 2.5rem; font-weight: bold;">Discover Your Financial Patterns</h1>
+        <p class="lead">Dive deep into your financial data and make informed decisions with our detailed statistics.</p>
+      </div>
+    </div>
+
     <div class="row">
-      <div class="col-md-6">
-        <h2>Total Expenses: {{ total_expenses|floatformat:1 }}$</h2>
+      <div class="col-md-6 mb-4">
+        <div class="card shadow">
+          <div class="card-body">
+            <h2 class="mb-3" style="font-size: 1.8rem;">Total Expenses: ${{ total_expenses|floatformat:2 }}</h2>
+          </div>
+        </div>
+      </div>
+    
+      <div class="col-md-6 mb-4">
+        <div class="card shadow">
+          <div class="card-body">
+            <h2 class="mb-3" style="font-size: 1.8rem;">Remaining Budget: ${{ user_profile.budget|floatformat:2 }}</h2>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="row mt-4">
-      <div class="col-md-6">
-        <div class="card">
+      <div class="col-md-6 mb-4">
+        <div class="card shadow">
           <div class="card-body">
-            <h2 class="card-title">Bar Chart: Expense Distribution by Name</h2>
-            <img src="{% static 'images/' %}{{ name_counts_plot }}" alt="Name Counts Bar Chart" class="img-fluid">
+            <h2 class="card-title mb-3" style="font-size: 1.5rem;">Expense Distribution by Name</h2>
+            <p class="text-muted">Explore how your expenses are distributed across different names. Identify trends and areas for potential savings.</p>
+            <img src="{% static 'images/' %}{{ name_counts_plot }}" alt="Name Counts Bar Chart" class="img-fluid rounded">
           </div>
         </div>
       </div>
 
-      <div class="col-md-6">
-        <div class="card">
+      <div class="col-md-6 mb-4">
+        <div class="card shadow">
           <div class="card-body">
-            <h2 class="card-title">Pie Chart: Expense Distribution by Category</h2>
-            <img src="{% static 'images/' %}{{ category_distribution_plot }}" alt="Category Distribution Pie Chart" class="img-fluid">
+            <h2 class="card-title mb-3" style="font-size: 1.5rem;">Expense Distribution by Category</h2>
+            <p class="text-muted">Visualize your spending habits by category. Categorizing expenses provides insights for effective budgeting and financial planning.</p>
+            <img src="{% static 'images/' %}{{ category_distribution_plot }}" alt="Category Distribution Pie Chart" class="img-fluid rounded">
           </div>
         </div>
       </div>

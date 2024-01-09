@@ -355,6 +355,7 @@ def combined_statistics(request):
     try:
         users_instance = Users.objects.get(user=request.user)
         expenses = Expense.objects.filter(user=users_instance)
+        user_profile = get_object_or_404(UserProfile, user=request.user)
 
         if not expenses.exists():
             # If the user has no expenses, redirect to another template
@@ -372,6 +373,7 @@ def combined_statistics(request):
         'name_counts_plot': bar_chart_context['name_counts_plot'],
         'category_distribution_plot': pie_chart_context['category_distribution_plot'],
         'total_expenses': bar_chart_context['total_expenses'],
+        'user_profile': user_profile,
     }
 
     # Render a template with the combined context
