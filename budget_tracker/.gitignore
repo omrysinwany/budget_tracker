@@ -39,5 +39,7 @@ db.sqlite3
 # Thumbnails
 thumb/
 
+#
 .idea/
 .coverage
+.env
