@@ -1,13 +1,65 @@
-{% extends "base.html" %} 
-{% block title %} Personal Expense Page {% endblock %}
-{% block content %} <h1>Personal Expense List</h1>
-    {% for expense in related_expenses %}
-        <p>{{ expense.name }} : <strong>{{ expense.amount }}$</strong> - {{ expense.Category.name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [{{ expense.date }}]</p>
-    {% endfor %}
-    <button type="button" class="btn btn-primary" onclick="goBack()">Go Back</button>
-    <script>
+{% extends "base.html" %}
+
+{% block title %} Personal Expenses Page {% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="jumbotron">
+      <h1 class="display-4 mb-3" style="font-family: 'Your Chosen Font'; font-size: 2.5rem; font-weight: bold;">Personal Expenses Page</h1>
+    </div>
+    
+    {% if related_expenses %}
+      <div class="list-group">
+        {% for expense in related_expenses %}
+          <div class="list-group-item expense-card rounded">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ expense.name }}</h5>
+              <small>{{ expense.date }}</small>
+            </div>
+            <p class="mb-1">Amount: <strong>{{ expense.amount }}$</strong></p>
+            <p class="mb-1">Category: {{ expense.category }}</p>
+            
+            {% if expense.notes %}
+              <button class="btn btn-link text-info" type="button" data-toggle="modal" data-target="#notesModal{{ expense.id }}">
+                Notes <i class="fas fa-sticky-note"></i>
+              </button>
+
+              <div class="modal fade" id="notesModal{{ expense.id }}" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content shadow">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="notesModalLabel">Notes</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p class="mb-1">{{ expense.notes }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            
+            <div class="mt-2">
+              <div class="btn-group" role="group">
+                <a href="{% url 'modify_expense' expense.id %}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Modify</a>
+                <a href="{% url 'delete_expense' expense.id %}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No personal expenses available.</p>
+    {% endif %}
+
+    <button type="button" class="btn btn-primary mt-3" onclick="goBack()">Go Back</button>
+  </div>
+
+  <script>
     function goBack() {
-        window.history.back();
+      window.history.back();
     }
-    </script>
+  </script>
 {% endblock %}

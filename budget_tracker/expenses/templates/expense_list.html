@@ -1,7 +1,94 @@
-{% extends "base.html" %} 
-{% block title %} Expense Page {% endblock %}
-{% block content %} <h1>Expense List</h1>
-   {% for expense in expenses %}
-        <p>{{ expense.name }} : <strong>{{ expense.amount }}$</strong> - {{ expense.Category.name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [{{ expense.date }}]</p>
-    {% endfor %}
+{% extends "base.html" %}
+
+{% block title %} Expenses List Page {% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="jumbotron">
+      <h1 class="display-4 mb-3" style="font-family: 'Your Chosen Font'; font-weight: bold;">Expense List</h1>
+      <p class="lead">Track and manage your expenses efficiently.</p>
+      <a href="{% url 'add_expense' %}" class="btn btn-success btn-lg float-right"><i class="fas fa-plus"></i> New Expense</a>
+    </div>
+
+    {% if messages %}
+      <div>
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if user_profile.budget > 0 %}
+      <!-- Remaining Budget -->
+      <p class="mb-3">Remaining Budget: ${{ user_profile.budget }}</p>
+    {% endif %}
+
+    <!-- Update Budget Form -->
+    <form method="post" action="{% url 'update_budget' %}" class="mb-4">
+      {% csrf_token %}
+      <div class="input-group">
+        <input type="number" name="budget" class="form-control" placeholder="Enter new budget">
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-primary">Update Budget</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="row">
+      {% for expense in expenses %}
+        <div class="col-md-4 mb-4">
+          <div class="card expense-card rounded mb-3">
+            <div class="card-body">
+              <h5 class="card-title mb-1">{{ expense.name }}</h5>
+              <small>{{ expense.date }}</small>
+              <p class="card-text mb-1">Amount: <strong>{{ expense.amount }}$</strong></p>
+              <p class="card-text mb-1">Category: {{ expense.category }}</p>
+              
+              {% if expense.notes %}
+                <button class="btn btn-link text-info" type="button" data-toggle="modal" data-target="#notesModal{{ expense.id }}">
+                  Notes <i class="fas fa-sticky-note"></i>
+                </button>
+
+                <div class="modal fade" id="notesModal{{ expense.id }}" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content shadow">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="notesModalLabel">Notes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p class="mb-1">{{ expense.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+
+              <div class="mt-3">
+                <div class="btn-group" role="group">
+                  <a href="{% url 'modify_expense' expense.id %}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Modify</a>
+                  <a href="{% url 'delete_expense' expense.id %}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Add Hover Effect -->
+    <style>
+      .expense-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transition: box-shadow 0.3s ease-in-out;
+      }
+    </style>
+  </div>
 {% endblock %}

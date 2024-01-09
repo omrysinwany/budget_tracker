@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %} No Expenses {% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="jumbotron">
+      <h1 class="display-4 mb-3" style="font-family: 'Your Chosen Font'; font-size: 2.5rem; font-weight: bold;">No Expenses Yet</h1>
+      <p class="lead">It seems you haven't added any expenses yet. Start managing your budget by adding expenses.</p>
+
+      <!-- Form to add an expense with a budget field -->
+      <form method="POST" action="{% url 'make_budget' %}" class="mb-3">
+        {% csrf_token %}
+        <label for="budget_input">Enter Your Budget:</label>
+        <input type="number" name="budget" id="budget_input" required>
+        <button type="submit" class="btn btn-primary">Add Expense</button>
+      </form>
+
+      <!-- Link to add an expense without specifying a budget -->
+      <p>Don't want to set a budget now? <a href="{% url 'add_expense' %}">Add Expense without Budget</a></p>
+    </div>
+  </div>
+{% endblock %}

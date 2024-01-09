@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %} User Profile {% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="jumbotron">
+      <h1 class="display-4 mb-3" style="font-family: 'Your Chosen Font'; font-size: 2.5rem; font-weight: bold;">Your Profile</h1>
+    </div>
+
+    <!-- Display messages -->
+    {% if messages %}
+      <div class="alert-container">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Display user profile information -->
+    <div class="profile-form mt-4">
+      <h2 class="mb-3">Profile Information</h2>
+      <p class="lead">Remaining Budget: ${{ user_profile.budget|floatformat:2 }}</p>
+      <!-- Add other bio information here -->
+
+      <form method="post" action="{% url 'user_profile' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success mt-3">Update Profile</button>
+      </form>
+    </div>
+
+    <div class="actions mt-3">
+      <a href="{% url 'change_password' %}" class="btn btn-primary mr-2">Change Password</a>
+      <a href="{% url 'password_reset' %}" class="btn btn-warning">Reset Password</a>
+    </div>
+  </div>
+
+  <!-- Add the following script to include the animate.css library for animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"></script>
+
+  <style>
+    /* Custom styles for the alerts */
+    .alert-container {
+      margin-top: 20px;
+    }
+
+    /* Custom styles for the profile form */
+    .profile-form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 0.5rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Custom styles for the remaining budget */
+    .remaining-budget {
+      margin-top: 20px;
+    }
+
+    /* Custom styles for the actions */
+    .actions {
+      margin-top: 20px;
+    }
+  </style>
+
+  <script>
+    // Add animations using animate.css
+    document.addEventListener("DOMContentLoaded", function () {
+      const elements = document.querySelectorAll('.jumbotron, .alert, .profile-form, .remaining-budget, .actions');
+      elements.forEach(element => {
+        element.classList.add('animate__animated', 'animate__fadeInUp');
+      });
+    });
+  </script>
+{% endblock %}

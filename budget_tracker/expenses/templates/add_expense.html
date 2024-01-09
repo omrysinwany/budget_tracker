@@ -1,9 +1,17 @@
-{% extends "base.html" %} 
-{% block title %} Expense Page {% endblock %}
-{% block content %} <h1>Expense List</h1>
+{% extends "base.html" %}
+
+{% block title %} Add Expense Page {% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="jumbotron">
+      <h1 class="display-4 mb-3" style="font-family: 'Your Chosen Font'; font-size: 2.5rem; font-weight: bold;">Add Expense</h1>
+    </div>
+
     <form method="POST">
         {% csrf_token %}
-         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary" name="save">OK</button>
+        {{form.as_p}}
+        <button type="submit" class="btn btn-primary" name="save">Submit</button>
     </form>
+  </div>
 {% endblock %}
