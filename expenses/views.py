@@ -293,7 +293,7 @@ def statistics_view(request):
     name_counts = df['name'].value_counts()
 
     # Define the directory for saving images
-    images_dir = os.path.join(settings.BASE_DIR, 'expenses', 'static', 'images')
+    images_dir = os.path.join(settings.BASE_DIR, 'budget_tracker', 'expenses', 'static', 'images')
     
     # Ensure the directory exists, create it if not
     os.makedirs(images_dir, exist_ok=True)
@@ -338,7 +338,7 @@ def user_statistics_view(request):
     category_counts = df['category'].value_counts()
 
      # Define the directory for saving images
-    images_dir = os.path.join(settings.BASE_DIR, 'expenses', 'static', 'images')
+    images_dir = os.path.join(settings.BASE_DIR, 'budget_tracker', 'expenses', 'static', 'images')
     
     # Ensure the directory exists, create it if not
     os.makedirs(images_dir, exist_ok=True)
