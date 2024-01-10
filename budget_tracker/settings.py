@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['omrysin.pythonanywhere.com', 'budget-tracker-j3fu.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['budget-tracker-j3fu.onrender.com', '127.0.0.1']
 
 
 # Application definition
@@ -148,9 +148,6 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://stackpath.bootstrapcdn.com", "https://cdnjs.cloudflare.com")
 CSP_SCRIPT_SRC = ("'self'", "https://code.jquery.com", "https://stackpath.bootstrapcdn.com", "https://cdnjs.cloudflare.com")
 CSP_FONT_SRC = ("'self'", "https://cdnjs.cloudflare.com")
-
-SECURE_SSL_REDIRECT = False
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
 
 CORS_ALLOWED_ORIGINS = [
     "https://budget-tracker-j3fu.onrender.com",

@@ -31,7 +31,6 @@ MANIFEST
 .crispy_bootstrap5.json
 
 # SQLite database file
-db.sqlite3
 
 # macOS
 .DS_Store
