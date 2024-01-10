@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from .views import reset_password
 from django.contrib.auth import views as auth_views
+from .views import csrf_failure_view
 
 
 urlpatterns = [
@@ -24,5 +25,7 @@ urlpatterns = [
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('update_budget/', views.update_budget, name='update_budget'),
     path('make_budget/', views.make_budget, name='make_budget'),
+    path('csrf_failure/', csrf_failure_view, name='csrf_failure'),
+    
     
 ]

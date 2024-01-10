@@ -293,7 +293,7 @@ def statistics_view(request):
     name_counts = df['name'].value_counts()
 
     # Define the directory for saving images
-    images_dir = os.path.join(settings.BASE_DIR, 'expenses', 'static', 'images')
+    images_dir = os.path.join(settings.BASE_DIR, 'expenses', 'static')
     
     # Ensure the directory exists, create it if not
     os.makedirs(images_dir, exist_ok=True)
@@ -338,7 +338,7 @@ def user_statistics_view(request):
     category_counts = df['category'].value_counts()
 
      # Define the directory for saving images
-    images_dir = os.path.join(settings.BASE_DIR, 'expenses', 'static', 'images')
+    images_dir = os.path.join(settings.BASE_DIR, 'expenses', 'static')
     
     # Ensure the directory exists, create it if not
     os.makedirs(images_dir, exist_ok=True)
@@ -394,3 +394,11 @@ def combined_statistics(request):
 
     # Render a template with the combined context
     return render(request, 'statistic.html', combined_context)
+
+def csrf_failure_view(request, reason=""):
+    """
+    Custom view for handling CSRF failures.
+    You can customize this function based on your requirements.
+    """
+    context = {'reason': reason}
+    return render(request, 'csrf_failure.html', context)
