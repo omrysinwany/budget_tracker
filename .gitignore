@@ -43,3 +43,4 @@ thumb/
 .idea/
 .coverage
 .env
+.venv
