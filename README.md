@@ -1,10 +1,14 @@
-# 💰 Expense Tracker Django App
+# 💰 Budget Tracker Django App
 
-Expense Tracker is a Django web application designed to help users manage and track their expenses efficiently.
+Budget Tracker is a Django web application designed to help users manage and track their expenses efficiently.
 
 ## 🌐 Overview
 
-Expense Tracker provides a user-friendly platform to manage your expenses effectively. It includes features like user authentication, easy expense management, budget control, and personalized statistics to gain insights into your spending patterns.
+Budget Tracker provides a user-friendly platform to manage your expenses effectively. It includes features like user authentication, easy expense management, budget control, and personalized statistics to gain insights into your spending patterns.
+
+
+<img width="1202" alt="webapp" src="https://github.com/omrysinwany/Java-Snake-Game/assets/67701429/e3588b33-ca56-4eab-8f4f-d245e631aa18">
+
 
 ## ✨ Features
 
@@ -17,6 +21,7 @@ Expense Tracker provides a user-friendly platform to manage your expenses effect
 ## 🚀 Demo
 
 Explore the live demo [https://budget-tracker-j3fu.onrender.com](https://budget-tracker-j3fu.onrender.com).
+
 
 ## 🛠 Installation
 
