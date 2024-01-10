@@ -16,7 +16,7 @@ Expense Tracker provides a user-friendly platform to manage your expenses effect
 
 ## 🚀 Demo
 
-Explore the live demo [here](#).
+Explore the live demo [https://budget-tracker-j3fu.onrender.com](#).
 
 ## 🛠 Installation
 
