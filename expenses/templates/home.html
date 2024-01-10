@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %} Welcome to Your Budget Tracker App! {% endblock %}
 
@@ -30,21 +31,21 @@
         <h2 class="mb-3">Track Expenses</h2>
         <p class="mb-3">Record daily expenses effortlessly. Categorize spending for a clear overview of your money flow.</p>
         <div class="animate__animated animate__fadeInUp">
-          <img src="/budget_tracker/static/images/coins.jpg" alt="Track Expenses" class="img-fluid img-hover">
+          <img src="{% static 'images/coins.jpg' %}" alt="Track Expenses" class="img-fluid img-hover">
         </div>
       </div>
       <div class="col-md-4 mb-4">
         <h2 class="mb-3">Create Budgets</h2>
         <p class="mb-3">Set monthly budgets for your expenses. Stay informed when approaching or exceeding your limits.</p>
         <div class="animate__animated animate__fadeInUp">
-          <img src="/budget_tracker/static/images/budget.jpg" alt="Create Budgets" class="img-fluid img-hover">
+          <img src="{% static 'images/budget.jpg' %}" alt="Create Budgets" class="img-fluid img-hover">
         </div>
       </div>
       <div class="col-md-4 mb-4">
         <h2 class="mb-3">Visualize Data</h2>
         <p class="mb-3">Explore charts and graphs for insights into your spending patterns.</p>
         <div class="animate__animated animate__fadeInUp">
-          <img src="/budget_tracker/static/images/pie.jpeg" alt="Visualize Data" class="img-fluid img-hover">
+          <img src="{% static 'images/pie.jpeg' %}" alt="Visualize Data" class="img-fluid img-hover">
         </div>
       </div>
     </div>
