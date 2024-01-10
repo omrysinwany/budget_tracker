@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     'csp',
+    'corsheaders',
 
 ]
 
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'csp.middleware.CSPMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "budget_tracker.urls"
@@ -128,7 +130,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/budget_tracker/static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'expenses', 'static'),
 ]
@@ -152,3 +154,8 @@ CSP_FONT_SRC = ("'self'", "https://cdnjs.cloudflare.com")
 
 SECURE_SSL_REDIRECT = False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
+
+CORS_ALLOWED_ORIGINS = [
+    "https://budget-tracker-j3fu.onrender.com",
+    # Add other trusted origins as needed
+]
